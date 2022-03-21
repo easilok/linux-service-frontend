@@ -11,3 +11,7 @@ export type SystemdUnitResponse = {
   units: SystemdUnitList[];
 }
 
+export type SystemdEventDetails = {
+  name: string;
+  enable?: boolean;
+}

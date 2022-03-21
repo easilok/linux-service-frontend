@@ -4,15 +4,21 @@
 
   import ServiceItem from './ServiceItem.svelte';
 
-  import type {SystemdUnitList, SystemdUnitResponse} from '../types/index';
+  import type { SystemdUnitList, SystemdUnitResponse, SystemdEventDetails } from '../types/index';
 
   let serviceList:SystemdUnitList[] = [];
   
   let filteredServiceList:SystemdUnitList[] = [];
   let filterUnit: string = "";
 
+  /* let API_URL = 'http://localhost:3000/' */
+  let API_URL = ''
+  // eslint-disable-next-line
+  /* const API_URL = process.env.API_URL || ''; */
+  /* console.log(__myapp.env); */
+
   onMount(() => {
-    fetch('http://localhost:3000/api/systemd/units')
+    fetch(API_URL + 'api/systemd/units')
     .then(response => response.json())
     .then((list: SystemdUnitResponse) => {
       if (list.units) {
@@ -29,10 +35,10 @@
     filteredServiceList = serviceList;
   }
 
-  function restartServiceHandler(event): void {
+  function restartServiceHandler(event:CustomEvent<SystemdEventDetails>): void {
     console.log(event);
     if (event.detail.name) {
-      fetch('http://localhost:3000/api/systemd/unit/restart', {
+      fetch(API_URL + 'api/systemd/unit/restart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,10 +56,10 @@
       }
   }
 
-  function stopServiceHandler(event): void {
+  function stopServiceHandler(event:CustomEvent<SystemdEventDetails>): void {
     console.log(event);
     if (event.detail.name) {
-      fetch('http://localhost:3000/api/systemd/unit/stop', {
+      fetch(API_URL + 'api/systemd/unit/stop', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,10 +77,10 @@
       }
   }
 
-  function startServiceHandler(event): void {
+  function startServiceHandler(event:CustomEvent<SystemdEventDetails>): void {
     console.log(event);
     if (event.detail.name) {
-      fetch('http://localhost:3000/api/systemd/unit/start', {
+      fetch(API_URL + 'api/systemd/unit/start', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +104,7 @@
   <input type="text" bind:value={filterUnit} />
 </div>
 
-<section class="flex flex-wrap my-4">
+<section class="service-list my-4">
   {#each filteredServiceList as service}
     <ServiceItem
       name={service.unit}
@@ -111,3 +117,12 @@
     />
   {/each}
 </section>
+
+<style>
+.service-list {
+  display: grid;
+  width: 100%;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 300px));
+}
+</style>

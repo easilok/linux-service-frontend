@@ -1,6 +1,7 @@
 <script lang="ts">
 
 import { createEventDispatcher } from 'svelte';
+import type { SystemdEventDetails } from '../types/index';
 
 import { PauseCircleIcon, PlayCircleIcon, RefreshCwIcon } from 'svelte-feather-icons';
 import Card from './UI/Card.svelte';
@@ -8,7 +9,7 @@ import Toggle from './UI/Toggle.svelte';
 
 const IconSize = '24';
 
-const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher<SystemdEventDetails>();
 
 export let name: string;
 export let state: string;
@@ -79,7 +80,7 @@ const startClickHandler = (event) => {
 
 <style>
 .service-item {
-  width: 25%;
+  /* width: 25%; */
   text-align: left;
 }
 
